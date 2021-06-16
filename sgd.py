@@ -14,10 +14,11 @@ def get_flux(x):
     """
     # TODO is there a better way to do this?
     # Convert to mag
-    p10 = np.percentile(x, 10)
-    x = np.where(x > p10, x, 0)
-    #x = 22.5 - 2.5*np.log10(x)
-    return np.sum(x)
+    #p10 = np.percentile(x, 10)
+    #x = np.where(x > p10, x, 0)
+    x = np.max(x)
+    print(x)
+    return x
 
 def fisher(ps):
     """
@@ -25,7 +26,7 @@ def fisher(ps):
     """
     return -np.sum(np.log(ps))
 
-def sgd(rgals, sgals):
+def sgd(rgals, sgals, plot=False):
     r_gs = []
     r_rs = []
     r_zs = []
@@ -50,22 +51,38 @@ def sgd(rgals, sgals):
         s_zs.append(get_flux(gal[2]))
     s_gs = np.array(s_gs)
     s_rs = np.array(s_rs)
-    s_zs = np.array(s_gs)
+    s_zs = np.array(s_zs)
 
     ps = []
-    for pair in zip((r_gs, r_rs, r_zs, r_rs - r_zs), 
-                    (s_gs, s_rs, s_zs, s_rs - s_zs)):
+    pairs = list(zip((r_gs, r_rs, r_zs, r_rs - r_zs),
+                     (s_gs, s_rs, s_zs, s_rs - s_zs)))
+
+    if plot:
+        f, axs = plt.subplots(1, len(pairs), figsize=(len(pairs)*2, 2), constrained_layout=True)
+        
+    names = ["g", "r", "z", "r - z"]
+    for i, name, pair in zip(range(len(pairs)), names, pairs):
         _, p = ks_2samp(pair[0], pair[1])
         ps.append(p)
 
-    print(ps, fisher(ps))
-    print(fisher((1, 0.9, 1)))
+        if plot:
+            h0 = np.histogram(pair[0], bins=51)
+            h1 = np.histogram(pair[1], bins=51)
 
-    #plt.plot(to_compare[0], to_compare[1], marker)
-    #plt.savefig("ims/colour-colour.png")
+            axs[i].set_title(name)
+            axs[i].bar(h0[1][:-1], h0[0], width=np.diff(h0[1]), align="edge")
+            axs[i].bar(h1[1][:-1], h1[0], width=np.diff(h1[1]), align="edge")
+
+    print(ps, fisher(ps[:-1]), fisher(ps))
+    print(fisher((1, 0.9, 1)))
+    f.savefig("dumped.png", dpi=300)
 
 if __name__ == "__main__":
-    rgals = glob("data/reals/*.npy")[:500]
-    sgals = glob("data/fakes/*.npy")[:500]
+    shuf = np.random.permutation(glob("data/reals/*.npy"))
+    rgals = shuf[:400]
+    sgals = shuf[400:800]
+    sgals = glob("data/fakes/*.npy")[:400]
+    rgals = glob("data/reals/*.npy")[:400]
+    print(len(rgals), len(sgals))
 
-    sgd(rgals, sgals)
+    sgd(rgals, sgals, plot=True)
