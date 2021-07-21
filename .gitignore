@@ -131,3 +131,5 @@ dmypy.json
 # vim stuff lol
 *.swp
 *.swo
+
+data/
