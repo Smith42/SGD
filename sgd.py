@@ -54,7 +54,7 @@ def get_aperture_magnitude(x, radius=6, correct=True):
         x = np.sum(x[mask])
     return x
 
-def get_size(gal):
+def get_size(gal, arcsec_per_pixel=0.262):
     """
     Get half-light radius of gal, assuming that centre of image == centre of gal.
 
@@ -74,12 +74,12 @@ def get_size(gal):
         crust_flux = np.median(gal[crust])
 
         if crust_flux <= initial_flux*0.5:
-            return (step - 1)*0.262
+            return (step - 1)*arcsec_per_pixel
 
     # No convergence? Return a NaN
     return np.nan
 
-def sgd(fis_0, fis_1, aperture=6):
+def sgd(fis_0, fis_1, aperture=6, arcsec_per_pixel=0.262):
 
     gs_0 = []
     rs_0 = []
@@ -102,11 +102,11 @@ def sgd(fis_0, fis_1, aperture=6):
         g_0 = get_aperture_magnitude(gal_0[0], radius=aperture)
         r_0 = get_aperture_magnitude(gal_0[1], radius=aperture)
         z_0 = get_aperture_magnitude(gal_0[2], radius=aperture)
-        size_0 = get_size(gal_0[0])
+        size_0 = get_size(gal_0[0], arcsec_per_pixel=arcsec_per_pixel)
         g_1 = get_aperture_magnitude(gal_1[0], radius=aperture)
         r_1 = get_aperture_magnitude(gal_1[1], radius=aperture)
         z_1 = get_aperture_magnitude(gal_1[2], radius=aperture)
-        size_1 = get_size(gal_1[0])
+        size_1 = get_size(gal_1[0], arcsec_per_pixel=arcsec_per_pixel)
 
         if np.all(list(map(np.isfinite, 
                        (g_0, r_0, z_0, size_0, g_1, r_1, z_1, size_1)))):
@@ -158,4 +158,4 @@ if __name__ == "__main__":
     gals_0 = np.random.permutation(glob(args.gals_0))
     gals_1 = np.random.permutation(glob(args.gals_1))
 
-    sgd(gals_0, gals_1)
+    sgd(gals_0, gals_1, arcsec_per_pixel=0.262)
