@@ -114,30 +114,30 @@ def sgd(fis_0, fis_1, aperture=6, arcsec_per_pixel=0.262):
             gs_0.append(g_0)
             rs_0.append(r_0)
             zs_0.append(z_0)
-            size_0.append(size_0)
+            sizes_0.append(size_0)
             gs_1.append(g_1)
             rs_1.append(r_1)
             zs_1.append(z_1)
-            size_1.append(size_1)
+            sizes_1.append(size_1)
 
     gs_0 = to_magnitude(np.array(gs_0))
     rs_0 = to_magnitude(np.array(rs_0))
     zs_0 = to_magnitude(np.array(zs_0))
-    size_0 = np.array(size_0)
+    sizes_0 = np.array(sizes_0)
     gs_1 = to_magnitude(np.array(gs_1))
     rs_1 = to_magnitude(np.array(rs_1))
     zs_1 = to_magnitude(np.array(zs_1))
-    size_1 = np.array(size_1)
+    sizes_1 = np.array(sizes_1)
 
     emds = []
-    pairs = list(zip((gs_0, rs_0, zs_0, size_0, gs_0 - rs_0, rs_0 - zs_0),
-                     (gs_1, rs_1, zs_1, size_1, gs_1 - rs_1, rs_1 - zs_1)))
+    pairs = list(zip((gs_0, rs_0, zs_0, sizes_0, gs_0 - rs_0, rs_0 - zs_0),
+                     (gs_1, rs_1, zs_1, sizes_1, gs_1 - rs_1, rs_1 - zs_1)))
 
     pairs = [(pair_0[np.logical_and(np.isfinite(pair_0), np.isfinite(pair_1))],
               pair_1[np.logical_and(np.isfinite(pair_0), np.isfinite(pair_1))]) 
               for (pair_0, pair_1) in pairs]
 
-    for pair_0, pair_1 in zip(pairs):
+    for pair_0, pair_1 in pairs:
         emd = wasserstein_distance(pair_0, pair_1)
         emds.append(emd)
 
@@ -151,11 +151,11 @@ if __name__ == "__main__":
     # arg parsing
     parser = argparse.ArgumentParser("Calculate the 'Synthetic Galaxy Distance' between two datasets.")
     # Args
-    parser.add_argument(type=str, dest=gals_0, help="Glob pointing to a dataset.")
-    parser.add_argument(type=str, dest=gals_1, help="Glob pointing to a dataset.")
+    parser.add_argument(type=str, dest="gals_0", help="Glob pointing to a dataset.")
+    parser.add_argument(type=str, dest="gals_1", help="Glob pointing to a dataset.")
     args = parser.parse_args()
     
-    gals_0 = np.random.permutation(glob(args.gals_0))
-    gals_1 = np.random.permutation(glob(args.gals_1))
+    gals_0 = np.random.permutation(glob(args.gals_0 + "/*"))
+    gals_1 = np.random.permutation(glob(args.gals_1 + "/*"))
 
     sgd(gals_0, gals_1, arcsec_per_pixel=0.262)
