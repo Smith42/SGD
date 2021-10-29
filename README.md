@@ -3,6 +3,16 @@
 This code calculates the 'Synthetic Galaxy Distance' (SGD) described in
 'Realistic galaxy simulation via score-based generative models'.
 
+The metric is the sum of Wasserstein-1 distances between emergent physical
+galaxy properties from two given datasets. Here we compare size and flux
+distributions.
+
+The SGD returns a single number, where a lower value denotes a closer
+match between two datasets. When combined with the [Fréchet Inception
+Distance](https://github.com/mseitzer/pytorch-fid) for visual and
+morphological similarity, we gain a good overview of the similarity
+between two large galaxy photometry datasets.
+
 ### Installation
 
 To install:
