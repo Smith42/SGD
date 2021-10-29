@@ -3,25 +3,25 @@
 This code calculates the 'Synthetic Galaxy Distance' (SGD) described in
 'Realistic galaxy simulation via score-based generative models'.
 
-## Installation
+### Installation
 
 To install:
 
 ```bash
-    pip install synthetic-galaxy-distance
+pip install synthetic-galaxy-distance
 ```
 
 Requirements: scipy; numpy; glob; tqdm; argparse.
 
-## Usage
+### Usage
 
 To run the code execute
 
 ```bash
-    python -m synthetic-galaxy-distance path/to/dataset1 path/to/dataset2 
+python -m synthetic-galaxy-distance path/to/dataset1 path/to/dataset2 
 ```
 
-## Citing
+### Citing
 
 If you find this work useful please consider citing:
 
