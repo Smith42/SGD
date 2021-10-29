@@ -6,20 +6,12 @@ Released under the AGPLv3 licence.
 @AUTHOR Mike Smith
 """
 
-import matplotlib as mpl
-mpl.use("Agg")
-
 import argparse
 import numpy as np
-from scipy.stats import rankdata, ks_2samp, wasserstein_distance, gaussian_kde
-from scipy.optimize import curve_fit
+from scipy.stats import wasserstein_distance
 from glob import glob
-import matplotlib.pyplot as plt
-import mpl_scatter_density
 import argparse
 from tqdm import tqdm
-from scipy.ndimage.filters import gaussian_filter
-from astropy.stats import sigma_clipped_stats
 
 def to_magnitude(flux):
     return 22.5 - 2.5 * np.log10(flux)
