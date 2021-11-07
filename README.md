@@ -1,7 +1,7 @@
 ## Calculate the 'Synthetic Galaxy Distance' between two galaxy datsets.
 
 This code calculates the 'Synthetic Galaxy Distance' (SGD) described in
-'Realistic galaxy simulation via score-based generative models'.
+<a href="https://arxiv.org/abs/2111.01713">'Realistic galaxy simulation via score-based generative models'</a>.
 
 The metric is the sum of Wasserstein-1 distances between emergent physical
 galaxy properties from two given galaxy postage stamp observation datasets.
